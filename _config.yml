@@ -1,4 +1,0 @@
-# GitHub Pages config
-# Permite servir archivos en carpetas que empiezan con punto (.well-known)
-include:
-  - .well-known

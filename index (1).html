@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SoundDrift</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0d0d0d;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .artist {
+      font-size: 15px;
+      color: #999;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: inline-block;
+      background: #7C5CFC;
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      max-width: 300px;
+    }
+    .btn-store {
+      background: transparent;
+      border: 1px solid #444;
+      color: #aaa;
+      font-size: 13px;
+    }
+    .note {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #555;
+    }
+    .wave {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin-bottom: 28px;
+    }
+    .wave span {
+      display: block;
+      width: 3px;
+      border-radius: 2px;
+      background: #7C5CFC;
+      animation: wave 0.8s ease-in-out infinite alternate;
+    }
+    .wave span:nth-child(1)  { height: 10px; animation-delay: 0.0s; }
+    .wave span:nth-child(2)  { height: 22px; animation-delay: 0.1s; }
+    .wave span:nth-child(3)  { height: 16px; animation-delay: 0.2s; }
+    .wave span:nth-child(4)  { height: 30px; animation-delay: 0.3s; }
+    .wave span:nth-child(5)  { height: 20px; animation-delay: 0.4s; }
+    .wave span:nth-child(6)  { height: 28px; animation-delay: 0.3s; }
+    .wave span:nth-child(7)  { height: 14px; animation-delay: 0.2s; }
+    .wave span:nth-child(8)  { height: 24px; animation-delay: 0.1s; }
+    .wave span:nth-child(9)  { height: 10px; animation-delay: 0.0s; }
+    @keyframes wave {
+      from { transform: scaleY(0.6); }
+      to   { transform: scaleY(1.0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">🎵</div>
+  <h1 id="songTitle">Cargando...</h1>
+  <p class="artist" id="songArtist"></p>
+
+  <div class="wave">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+
+  <button class="btn" id="openBtn" onclick="openApp()">
+    Abrir en SoundDrift
+  </button>
+
+  <a class="btn btn-store"
+     href="https://play.google.com/store/apps/details?id=com.sounddrift.music"
+     id="storeBtn">
+    Descargar SoundDrift
+  </a>
+
+  <p class="note" id="note">Redirigiendo automáticamente...</p>
+
+<script>
+  // ── Leer parámetros de la URL ──────────────────────────────────────────────
+  const params  = new URLSearchParams(window.location.search);
+  const title   = params.get('title')   || '';
+  const artist  = params.get('artist')  || '';
+  const artwork = params.get('artwork') || '';
+
+  // ── Mostrar info en la página ──────────────────────────────────────────────
+  document.getElementById('songTitle').textContent  = title  || 'SoundDrift';
+  document.getElementById('songArtist').textContent = artist || 'Escucha música sin límites';
+
+  // ── Construir el deep link sounddrift:// ──────────────────────────────────
+  function buildDeepLink() {
+    const p = new URLSearchParams();
+    if (title)   p.set('title',   title);
+    if (artist)  p.set('artist',  artist);
+    if (artwork) p.set('artwork', artwork);
+    return 'sounddrift://share?' + p.toString();
+  }
+
+  // ── Intentar abrir la app ──────────────────────────────────────────────────
+  function openApp() {
+    const deepLink = buildDeepLink();
+    window.location.href = deepLink;
+
+    // Si no abre en 2s, mostrar botón de tienda
+    setTimeout(() => {
+      document.getElementById('note').textContent =
+        '¿No tienes SoundDrift? Descárgalo gratis.';
+      document.getElementById('storeBtn').style.background = '#1a1a1a';
+    }, 2000);
+  }
+
+  // ── Auto-redirect al cargar la página ─────────────────────────────────────
+  // Solo si hay título (viene de un link compartido, no visita directa)
+  if (title) {
+    setTimeout(openApp, 800);
+  }
+</script>
+
+</body>
+</html>

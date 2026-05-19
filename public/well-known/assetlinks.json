@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sounddrift.music",
+      "sha256_cert_fingerprints": [
+        "15:CD:42:71:A5:32:72:75:AE:A4:ED:C9:6E:D9:3F:01:1A:31:86:94:32:AE:B9:9C:F6:FD:30:7E:86:81:97:5B"
+      ]
+    }
+  }
+]

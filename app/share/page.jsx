@@ -85,6 +85,7 @@ export async function generateMetadata({ searchParams }) {
       // web:should_fallback: si la app no está instalada, quédate en la web
       'al:web:should_fallback': 'true',
       'al:web:url':             pageUrl,
+      'fb:app_id':               '2032473874293972',
     },
   };
 }

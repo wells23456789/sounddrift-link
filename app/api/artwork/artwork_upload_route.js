@@ -1,26 +1,19 @@
-
 // app/api/artwork/route.js
-// ─────────────────────────────────────────────────────────────────────────────
-// Recibe una imagen en base64 desde Flutter, la guarda en memoria
-// y la sirve como URL pública temporal (TTL: 1 hora).
-// Flutter la llama ANTES de construir el share URL para obtener una
-// URL https:// que WhatsApp pueda cargar en el preview OG.
-//
-// POST /api/artwork  { "data": "<base64>", "mime": "image/jpeg" }
-// → { "url": "https://sounddrift-link.vercel.app/api/artwork?id=xxxx" }
-//
-// GET /api/artwork?id=xxxx
-// → image/jpeg (la imagen)
-// ─────────────────────────────────────────────────────────────────────────────
+// FIX: el Map() en memoria no funciona en Vercel serverless porque cada
+// request puede ir a una instancia diferente. Usamos el sistema de archivos
+// temporales (/tmp) que sí persiste dentro de la misma instancia y además
+// Next.js cachea las respuestas GET con s-maxage, lo que garantiza que
+// WhatsApp siempre obtenga la imagen aunque llegue a otra instancia.
 
-// Almacén en memoria (edge/serverless: cada instancia tiene su propio mapa,
-// pero con caché CDN de 1h es suficiente para el caso de uso de share).
-const store = new Map(); // id → { buffer, mime, ts }
-const TTL   = 60 * 60 * 1000; // 1 hora
+import { writeFile, readFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
+import path from 'path';
+
+const TMP = '/tmp/sd_artwork';
 
 function newId() {
   return Math.random().toString(36).slice(2, 10) +
-         Math.random().toString(36).slice(2, 10);
+         Date.now().toString(36);
 }
 
 export async function POST(request) {
@@ -28,17 +21,14 @@ export async function POST(request) {
     const { data, mime = 'image/jpeg' } = await request.json();
     if (!data) return Response.json({ error: 'no data' }, { status: 400 });
 
-    // Limpiar entradas viejas
-    const now = Date.now();
-    for (const [k, v] of store) {
-      if (now - v.ts > TTL) store.delete(k);
-    }
+    if (!existsSync(TMP)) await mkdir(TMP, { recursive: true });
 
-    const buffer = Buffer.from(data, 'base64');
-    const id     = newId();
-    store.set(id, { buffer, mime, ts: now });
+    const id  = newId();
+    const ext = mime.includes('png') ? 'png' : 'jpg';
+    const buf = Buffer.from(data, 'base64');
+    await writeFile(path.join(TMP, `${id}.${ext}`), buf);
 
-    const url = `${new URL(request.url).origin}/api/artwork?id=${id}`;
+    const url = `${new URL(request.url).origin}/api/artwork?id=${id}&ext=${ext}`;
     return Response.json({ url });
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
@@ -46,16 +36,24 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  const id = new URL(request.url).searchParams.get('id');
+  const { searchParams } = new URL(request.url);
+  const id  = searchParams.get('id');
+  const ext = searchParams.get('ext') || 'jpg';
   if (!id) return new Response('missing id', { status: 400 });
 
-  const entry = store.get(id);
-  if (!entry) return new Response('not found or expired', { status: 404 });
-
-  return new Response(entry.buffer, {
-    headers: {
-      'Content-Type':  entry.mime,
-      'Cache-Control': 'public, max-age=3600',
-    },
-  });
+  try {
+    const buf  = await readFile(path.join(TMP, `${id}.${ext}`));
+    const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+    return new Response(buf, {
+      headers: {
+        'Content-Type':  mime,
+        // Cache largo: WhatsApp scrapea y cachea el OG, necesita que la
+        // imagen esté disponible cuando el preview se genera (segundos
+        // después del share) y cuando el receptor la ve (minutos/horas después).
+        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+      },
+    });
+  } catch {
+    return new Response('not found', { status: 404 });
+  }
 }

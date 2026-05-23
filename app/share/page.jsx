@@ -1,15 +1,12 @@
 // app/share/page.jsx
 // ─────────────────────────────────────────────────────────────────────────────
-// FIX 1: og:image type cambiado de 'image/svg+xml' → 'image/png'
-//         WhatsApp ignora SVG. Ahora /api/og devuelve PNG real via @vercel/og.
-//
-// FIX 2: Se agregan App Links (al:android / al:ios) para que al tocar
-//         la tarjeta en WhatsApp/iMessage abra SoundDrift directamente
-//         en vez del navegador — igual que Spotify.
+// App Links + fb:app_id para que Facebook Stories genere el sticker
+// interactivo "Abrir en SoundDrift" cuando se comparte una historia.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const BASE_URL    = 'https://sounddrift-link.vercel.app';
 const ANDROID_PKG = 'com.sounddrift.music';
+const FB_APP_ID   = '2032473874293972';
 // Si tienes app en App Store, pon el ID aquí. Si no, déjalo vacío ('').
 const IOS_APP_ID  = '';
 
@@ -21,19 +18,16 @@ export async function generateMetadata({ searchParams }) {
 
   const description = `${title} — ${artist} · Escucha en SoundDrift`;
 
-  // URL de la imagen OG — /api/og ahora devuelve PNG real
   const ogImage = `${BASE_URL}/api/og`
     + `?title=${encodeURIComponent(title)}`
     + `&artist=${encodeURIComponent(artist)}`
     + (artwork ? `&artwork=${encodeURIComponent(artwork)}` : '');
 
-  // Deep link para abrir la canción directamente en la app
   const deepLink = `sounddrift://share`
     + `?title=${encodeURIComponent(title)}`
     + `&artist=${encodeURIComponent(artist)}`
     + (artwork ? `&artwork=${encodeURIComponent(artwork)}` : '');
 
-  // URL canónica de esta página
   const pageUrl = `${BASE_URL}/share`
     + `?title=${encodeURIComponent(title)}`
     + `&artist=${encodeURIComponent(artist)}`;
@@ -53,7 +47,6 @@ export async function generateMetadata({ searchParams }) {
         width:  600,
         height: 600,
         alt:    `${title} — ${artist}`,
-        // FIX: PNG, no SVG. Sin esto WhatsApp ignora la imagen.
         type:   'image/png',
       }],
     },
@@ -65,27 +58,31 @@ export async function generateMetadata({ searchParams }) {
       images:      [ogImage],
     },
 
-    // ── App Links ──────────────────────────────────────────────────────────
-    // Estos meta tags le dicen a WhatsApp, iMessage y navegadores que
-    // al tocar el link deben abrir la app nativa en vez del navegador.
-    // Mismo mecanismo que usa Spotify con open.spotify.com.
     other: {
-      // Android
+      // ── App Links Android ────────────────────────────────────────────────
+      // Al tocar la card en WhatsApp/Facebook/navegador → abre SoundDrift.
+      // Facebook lee estos tags del content_url para generar el sticker
+      // interactivo "Abrir en SoundDrift" en la historia.
       'al:android:url':      deepLink,
       'al:android:app_name': 'SoundDrift',
       'al:android:package':  ANDROID_PKG,
 
-      // iOS (solo activo si hay App Store ID)
+      // ── App Links iOS ────────────────────────────────────────────────────
       ...(IOS_APP_ID ? {
         'al:ios:url':          deepLink,
         'al:ios:app_name':     'SoundDrift',
         'al:ios:app_store_id': IOS_APP_ID,
       } : {}),
 
-      // web:should_fallback: si la app no está instalada, quédate en la web
+      // ── Web fallback ─────────────────────────────────────────────────────
       'al:web:should_fallback': 'true',
       'al:web:url':             pageUrl,
-      'fb:app_id':               '2032473874293972',
+
+      // ── Facebook App ID ──────────────────────────────────────────────────
+      // Este tag conecta la URL con tu app registrada en Facebook Developer.
+      // Facebook lo usa para verificar que SoundDrift tiene App Links válidos
+      // y genera el sticker interactivo en las historias automáticamente.
+      'fb:app_id': FB_APP_ID,
     },
   };
 }

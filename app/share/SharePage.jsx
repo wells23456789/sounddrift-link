@@ -1,11 +1,10 @@
 'use client';
 // app/share/SharePage.jsx
-// Estilo inspirado en Spotify: fondo oscuro, gradiente de color de la portada,
-// tarjeta centrada, tipografía bold, un solo botón de descarga.
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useRef } from 'react';
 
 const DOWNLOAD_URL = 'https://www.mediafire.com/file/y6athk86ct4daqa/app-release.apk/file';
+const BASE         = 'https://sounddrift-link.vercel.app';
 
 export default function SharePage({ searchParams }) {
   const params  = searchParams instanceof Promise ? use(searchParams) : searchParams;
@@ -13,11 +12,16 @@ export default function SharePage({ searchParams }) {
   const artist  = params?.artist  || '';
   const artwork = params?.artwork || '';
 
-  const [redirected, setRedirected] = useState(false);
-  const [showDownload, setShowDownload] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [redirected, setRedirected]   = useState(false);
+  const [imgLoaded,  setImgLoaded]    = useState(false);
+  const [dominantColor, setDominant]  = useState('#1a0533');
+  const canvasRef = useRef(null);
 
-  const ogImageUrl = `https://sounddrift-link.vercel.app/api/og?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}${artwork ? `&artwork=${encodeURIComponent(artwork)}` : ''}`;
+  // URL de la imagen OG (portada cuadrada de iTunes)
+  const artworkUrl = `${BASE}/api/og`
+    + `?title=${encodeURIComponent(title)}`
+    + `&artist=${encodeURIComponent(artist)}`
+    + (artwork ? `&artwork=${encodeURIComponent(artwork)}` : '');
 
   function buildDeepLink() {
     const p = new URLSearchParams();
@@ -29,319 +33,319 @@ export default function SharePage({ searchParams }) {
 
   function openApp() {
     window.location.href = buildDeepLink();
-    setTimeout(() => setShowDownload(true), 1800);
+  }
+
+  // Extraer color dominante de la portada para el gradiente de fondo
+  function extractColor(imgEl) {
+    try {
+      const canvas = canvasRef.current || document.createElement('canvas');
+      canvas.width = 8; canvas.height = 8;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgEl, 0, 0, 8, 8);
+      const d = ctx.getImageData(0, 0, 8, 8).data;
+      let r = 0, g = 0, b = 0;
+      for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i+1]; b += d[i+2]; }
+      const px = d.length / 4;
+      // Oscurecer bastante para que sea un fondo, no un color brillante
+      r = Math.floor(r / px * 0.45);
+      g = Math.floor(g / px * 0.45);
+      b = Math.floor(b / px * 0.45);
+      setDominant(`rgb(${r},${g},${b})`);
+    } catch (_) {}
   }
 
   useEffect(() => {
     if (title && !redirected) {
       setRedirected(true);
-      const t = setTimeout(openApp, 600);
-      return () => clearTimeout(t);
+      setTimeout(openApp, 500);
     }
   }, [title]);
 
   return (
     <>
+      <canvas ref={canvasRef} style={{ display: 'none' }} crossOrigin="anonymous" />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700;900&family=DM+Sans:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;900&display=swap');
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-          --accent: #1DB954;
-          --bg: #0a0a0a;
-          --card-bg: rgba(255,255,255,0.05);
-          --text: #ffffff;
-          --text-secondary: rgba(255,255,255,0.6);
-          --radius: 16px;
-        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
         html, body {
-          background: var(--bg);
-          color: var(--text);
-          font-family: 'DM Sans', sans-serif;
-          min-height: 100vh;
-          overflow-x: hidden;
-        }
-
-        .page {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 24px 20px 48px;
-          position: relative;
+          height: 100%;
+          font-family: 'Figtree', sans-serif;
+          background: #000;
+          color: #fff;
           overflow: hidden;
         }
 
-        /* Gradiente de fondo difuso como Spotify */
-        .bg-blur {
+        /* ── Fondo: portada desenfocada que llena toda la pantalla ── */
+        .bg-artwork {
+          position: fixed;
+          inset: -40px;
+          background-image: var(--bg-img);
+          background-size: cover;
+          background-position: center;
+          filter: blur(80px) brightness(0.35) saturate(1.4);
+          transform: scale(1.15);
+          transition: background-image 0.8s ease;
+          z-index: 0;
+        }
+
+        /* Capa de color dominante encima del blur */
+        .bg-color {
           position: fixed;
           inset: 0;
-          z-index: 0;
-          overflow: hidden;
-        }
-        .bg-blur::before {
-          content: '';
-          position: absolute;
-          width: 600px;
-          height: 600px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 70%);
-          top: -150px;
-          left: -100px;
-          filter: blur(60px);
-        }
-        .bg-blur::after {
-          content: '';
-          position: absolute;
-          width: 500px;
-          height: 500px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(29,185,84,0.2) 0%, transparent 70%);
-          bottom: -100px;
-          right: -100px;
-          filter: blur(80px);
+          background: var(--dominant, #1a0533);
+          opacity: 0.55;
+          z-index: 1;
+          transition: background 1s ease;
         }
 
-        .content {
+        /* Gradiente negro desde abajo */
+        .bg-fade {
+          position: fixed;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 30%,
+            rgba(0,0,0,0.7) 65%,
+            rgba(0,0,0,0.97) 100%
+          );
+          z-index: 2;
+        }
+
+        /* ── Layout ── */
+        .page {
           position: relative;
-          z-index: 1;
-          width: 100%;
-          max-width: 380px;
+          z-index: 3;
+          height: 100dvh;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          gap: 0;
+          padding: 0 24px 40px;
+          max-width: 480px;
+          margin: 0 auto;
         }
 
-        /* Logo */
-        .logo {
+        /* Logo arriba */
+        .nav {
           display: flex;
           align-items: center;
           gap: 8px;
-          margin-bottom: 40px;
+          padding: 52px 0 0;
           opacity: 0;
-          animation: fadeUp 0.6s ease forwards;
+          animation: fadeIn 0.5s ease 0.1s forwards;
         }
-        .logo-icon {
-          width: 32px;
-          height: 32px;
+        .nav-icon {
+          width: 28px; height: 28px;
           background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          border-radius: 7px;
+          display: flex; align-items: center; justify-content: center;
+          gap: 1.5px;
+          padding: 5px;
         }
-        .logo-bars {
-          display: flex;
-          align-items: center;
-          gap: 2px;
-          height: 18px;
-        }
-        .logo-bar {
-          width: 3px;
-          border-radius: 2px;
+        .nav-bar {
+          width: 2.5px;
           background: white;
+          border-radius: 2px;
         }
-        .logo-name {
-          font-size: 15px;
+        .nav-name {
+          font-size: 14px;
           font-weight: 700;
-          letter-spacing: 0.5px;
-          color: white;
+          letter-spacing: 0.3px;
+          opacity: 0.9;
         }
 
-        /* Portada */
-        .artwork-wrap {
-          position: relative;
-          width: 260px;
-          height: 260px;
-          border-radius: 20px;
-          overflow: hidden;
-          box-shadow:
-            0 32px 80px rgba(0,0,0,0.6),
-            0 0 0 1px rgba(255,255,255,0.08);
-          opacity: 0;
-          animation: fadeUp 0.6s ease 0.15s forwards;
-          flex-shrink: 0;
-        }
-        .artwork-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transition: opacity 0.3s;
-        }
-        .artwork-placeholder {
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, #1a1a2e, #16213e);
+        /* Portada centrada */
+        .artwork-section {
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 20px 0;
+        }
+        .artwork-wrap {
+          width: min(280px, 72vw);
+          height: min(280px, 72vw);
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow:
+            0 40px 120px rgba(0,0,0,0.8),
+            0 0 0 1px rgba(255,255,255,0.06);
+          opacity: 0;
+          animation: scaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s forwards;
+          position: relative;
+        }
+        .artwork-img {
+          width: 100%; height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: opacity 0.4s;
+        }
+        .artwork-placeholder {
+          width: 100%; height: 100%;
+          background: linear-gradient(135deg, #1e1040, #0d0620);
+          display: flex; align-items: center; justify-content: center;
           font-size: 72px;
         }
 
-        /* Info canción */
+        /* Info + botones abajo */
+        .bottom {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+
         .song-info {
-          width: 100%;
-          text-align: center;
-          margin-top: 28px;
           opacity: 0;
-          animation: fadeUp 0.6s ease 0.25s forwards;
+          animation: fadeUp 0.5s ease 0.35s forwards;
+          margin-bottom: 28px;
         }
         .song-title {
-          font-size: 26px;
-          font-weight: 800;
-          line-height: 1.2;
-          letter-spacing: -0.5px;
+          font-size: clamp(22px, 6vw, 30px);
+          font-weight: 900;
+          line-height: 1.15;
+          letter-spacing: -0.8px;
           color: #fff;
-          margin-bottom: 6px;
+          margin-bottom: 5px;
+          /* Texto largo: recortar con ellipsis */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .song-artist {
-          font-size: 16px;
-          font-weight: 500;
-          color: var(--text-secondary);
+          font-size: 15px;
+          font-weight: 600;
+          color: rgba(255,255,255,0.65);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        /* Separador con onda */
-        .wave-sep {
-          display: flex;
-          align-items: center;
-          gap: 2px;
-          margin: 24px 0;
+        /* Botón principal — igual que Spotify: pill blanco */
+        .btn-open {
+          width: 100%;
+          padding: 17px;
+          border-radius: 50px;
+          border: none;
+          background: #fff;
+          color: #000;
+          font-family: 'Figtree', sans-serif;
+          font-size: 15px;
+          font-weight: 800;
+          letter-spacing: 0.3px;
+          cursor: pointer;
+          transition: transform 0.12s, background 0.15s;
           opacity: 0;
-          animation: fadeUp 0.6s ease 0.3s forwards;
+          animation: fadeUp 0.5s ease 0.45s forwards;
         }
-        .wave-bar {
-          width: 3px;
-          background: rgba(139,92,246,0.7);
-          border-radius: 2px;
-          animation: wavePulse 1.2s ease-in-out infinite alternate;
-        }
+        .btn-open:active  { transform: scale(0.97); }
+        .btn-open:hover   { background: rgba(255,255,255,0.88); }
 
-        /* Botones */
-        .btn-primary {
+        /* Botón secundario — pill transparente con borde */
+        .btn-download {
+          display: block;
           width: 100%;
           padding: 16px;
           border-radius: 50px;
-          border: none;
-          background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-          color: white;
-          font-size: 16px;
-          font-weight: 700;
-          letter-spacing: 0.3px;
-          cursor: pointer;
-          transition: transform 0.15s, box-shadow 0.15s;
-          box-shadow: 0 8px 32px rgba(139,92,246,0.4);
-          opacity: 0;
-          animation: fadeUp 0.6s ease 0.35s forwards;
-        }
-        .btn-primary:active { transform: scale(0.97); }
-        .btn-primary:hover  { box-shadow: 0 12px 40px rgba(139,92,246,0.55); }
-
-        .btn-download {
-          width: 100%;
-          padding: 15px;
-          border-radius: 50px;
-          border: 1.5px solid rgba(255,255,255,0.15);
-          background: transparent;
-          color: rgba(255,255,255,0.75);
+          border: 1.5px solid rgba(255,255,255,0.25);
+          background: rgba(255,255,255,0.07);
+          color: rgba(255,255,255,0.8);
+          font-family: 'Figtree', sans-serif;
           font-size: 15px;
-          font-weight: 600;
-          cursor: pointer;
-          text-decoration: none;
-          display: block;
+          font-weight: 700;
           text-align: center;
-          margin-top: 12px;
-          transition: all 0.2s;
+          text-decoration: none;
+          cursor: pointer;
+          margin-top: 10px;
+          transition: all 0.15s;
+          backdrop-filter: blur(12px);
           opacity: 0;
-          animation: fadeUp 0.6s ease 0.45s forwards;
-          backdrop-filter: blur(10px);
+          animation: fadeUp 0.5s ease 0.52s forwards;
         }
         .btn-download:hover {
-          border-color: rgba(255,255,255,0.35);
-          color: white;
-          background: rgba(255,255,255,0.05);
+          border-color: rgba(255,255,255,0.45);
+          color: #fff;
+          background: rgba(255,255,255,0.12);
         }
 
-        .badge {
-          margin-top: 32px;
+        .footer-note {
+          text-align: center;
           font-size: 11px;
-          color: rgba(255,255,255,0.25);
-          letter-spacing: 1px;
+          color: rgba(255,255,255,0.22);
+          letter-spacing: 0.8px;
           text-transform: uppercase;
+          margin-top: 20px;
           opacity: 0;
-          animation: fadeUp 0.6s ease 0.5s forwards;
+          animation: fadeUp 0.5s ease 0.6s forwards;
         }
 
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
         @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(16px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes wavePulse {
-          from { transform: scaleY(0.4); }
-          to   { transform: scaleY(1); }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.88); }
+          to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
 
+      {/* Fondo con portada desenfocada */}
+      <div
+        className="bg-artwork"
+        style={{ '--bg-img': imgLoaded ? `url(${artworkUrl})` : 'none' }}
+      />
+      <div
+        className="bg-color"
+        style={{ '--dominant': dominantColor }}
+      />
+      <div className="bg-fade" />
+
       <div className="page">
-        <div className="bg-blur" />
-
-        <div className="content">
-          {/* Logo */}
-          <div className="logo">
-            <div className="logo-icon">
-              <div className="logo-bars">
-                {[12,18,14,20,10,16,8,18,14].map((h,i) => (
-                  <div key={i} className="logo-bar" style={{
-                    height: `${h}px`,
-                    animationDelay: `${i * 0.1}s`
-                  }}/>
-                ))}
-              </div>
-            </div>
-            <span className="logo-name">SoundDrift</span>
+        {/* Nav / Logo */}
+        <div className="nav">
+          <div className="nav-icon">
+            {[10,16,12,18,8,14,10].map((h,i) => (
+              <div key={i} className="nav-bar" style={{ height: `${h}px` }}/>
+            ))}
           </div>
+          <span className="nav-name">SoundDrift</span>
+        </div>
 
-          {/* Portada */}
+        {/* Portada */}
+        <div className="artwork-section">
           <div className="artwork-wrap">
             <img
-              src={ogImageUrl}
+              src={artworkUrl}
               alt={title || 'SoundDrift'}
               className="artwork-img"
-              onLoad={() => setImgLoaded(true)}
+              crossOrigin="anonymous"
+              onLoad={(e) => {
+                setImgLoaded(true);
+                extractColor(e.target);
+              }}
               style={{ opacity: imgLoaded ? 1 : 0 }}
             />
             {!imgLoaded && (
               <div className="artwork-placeholder">🎵</div>
             )}
           </div>
+        </div>
 
-          {/* Título y artista */}
+        {/* Info + botones */}
+        <div className="bottom">
           <div className="song-info">
             <div className="song-title">{title || 'SoundDrift'}</div>
             {artist && <div className="song-artist">{artist}</div>}
           </div>
 
-          {/* Onda decorativa */}
-          <div className="wave-sep">
-            {[12,20,16,28,18,32,14,26,20,24,16,30,12,22,18,28,14,24,10,20].map((h,i) => (
-              <div key={i} className="wave-bar" style={{
-                height: `${h}px`,
-                animationDelay: `${(i * 0.08) % 0.8}s`,
-              }}/>
-            ))}
-          </div>
-
-          {/* Botón abrir app */}
-          <button className="btn-primary" onClick={openApp}>
+          <button className="btn-open" onClick={openApp}>
             Abrir en SoundDrift
           </button>
 
-          {/* Botón descargar */}
           <a
             className="btn-download"
             href={DOWNLOAD_URL}
@@ -351,7 +355,7 @@ export default function SharePage({ searchParams }) {
             Descargar SoundDrift
           </a>
 
-          <div className="badge">Escucha música sin límites</div>
+          <div className="footer-note">Escucha música sin límites</div>
         </div>
       </div>
     </>

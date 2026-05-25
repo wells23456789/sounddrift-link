@@ -291,7 +291,7 @@ export default function SharePage({ searchParams }) {
 
             <div className="btn-row">
               <button className="btn-open" onClick={openApp}>
-                Abrir en SoundDrift
+                Escuchar en SoundDrift
               </button>
               <a
                 className="btn-download"

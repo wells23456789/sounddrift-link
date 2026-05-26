@@ -279,12 +279,12 @@ export default function SharePage({ searchParams }) {
             {/* Artista debajo */}
             <p className="song-artist">
               {artist || 'Artista desconocido'}
-              {artist && ' · Disponible en SoundDrift'}
+              {artist && ' · descárgala con SoundDrift'}
             </p>
 
             <p className="song-meta">
-              Escucha esta canción sin anuncios y sin conexión.<br/>
-              Descarga SoundDrift gratis y disfrútala ahora.
+              Con SoundDrift puedes descargar esta canción y toda tu música<br/>
+              directamente en tu dispositivo. Sin suscripciones, sin anuncios.
             </p>
 
             {/* Solo botón descargar */}
@@ -295,7 +295,7 @@ export default function SharePage({ searchParams }) {
             {/* Música similar */}
             {related.length > 0 && (
               <>
-                <div className="related-label">Música similar que puedes encontrar en SoundDrift</div>
+                <div className="related-label">También en SoundDrift</div>
                 <div className="related-list">
                   {related.map((r, i) => (
                     <div key={i} className="related-item">

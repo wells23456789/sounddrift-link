@@ -25,24 +25,37 @@ export default function SharePage({ searchParams }) {
   }
   function openApp() { window.location.href = buildDeepLink(); }
 
-  // Portada principal + canciones relacionadas de iTunes
   useEffect(() => {
-    if (artwork) { setDisplayArtwork(artwork); }
+    if (artwork) setDisplayArtwork(artwork);
     if (!title && !artist) return;
+
+    // Buscar canción principal + canciones similares por género
     const q = encodeURIComponent(`${artist} ${title}`.trim());
-    fetch(`https://itunes.apple.com/search?term=${q}&entity=song&limit=8&media=music`)
+    fetch(`https://itunes.apple.com/search?term=${q}&entity=song&limit=3&media=music`)
       .then(r => r.json())
-      .then(data => {
+      .then(async data => {
         const results = data?.results ?? [];
         const main = results[0];
         if (main && !artwork) {
           setDisplayArtwork((main.artworkUrl100 || '').replace('100x100bb','600x600bb'));
         }
-        // Canciones relacionadas: resto de resultados del mismo artista
-        const rel = results.slice(1).filter(r =>
-          r.artworkUrl100 && r.trackName
-        ).slice(0, 5);
-        setRelated(rel);
+
+        // Buscar música similar por género usando el primaryGenreName del primer resultado
+        const genre = main?.primaryGenreName;
+        const searchTerm = genre
+          ? encodeURIComponent(genre)
+          : encodeURIComponent(artist || title);
+
+        const relRes = await fetch(
+          `https://itunes.apple.com/search?term=${searchTerm}&entity=song&limit=12&media=music`
+        ).then(r => r.json()).catch(() => ({ results: [] }));
+
+        // Filtrar: que no sea la misma canción, con portada, max 5
+        const filtered = (relRes?.results ?? [])
+          .filter(r => r.artworkUrl100 && r.trackName &&
+            !(r.trackName === title && r.artistName === artist))
+          .slice(0, 5);
+        setRelated(filtered);
       })
       .catch(() => {});
   }, [title, artist, artwork]);
@@ -83,17 +96,21 @@ export default function SharePage({ searchParams }) {
           pointer-events: none;
         }
 
-        /* Nav */
+        /* Nav — sin borde en el icono */
         .nav {
           position: relative; z-index: 2;
           display: flex; align-items: center; gap: 10px;
           padding: 28px 48px 0;
           opacity: 0; animation: fadeIn 0.5s ease forwards;
         }
-        .nav img {
+        .nav-icon {
           width: 38px; height: 38px;
           border-radius: 50%;
-          /* Sin borde negro — la imagen ya tiene fondo morado */
+          object-fit: cover;
+          display: block;
+          /* Sin outline ni box-shadow ni border */
+          outline: none;
+          border: none;
           background: transparent;
         }
         .nav-name { font-size: 16px; font-weight: 800; }
@@ -103,103 +120,89 @@ export default function SharePage({ searchParams }) {
           position: relative; z-index: 2;
           display: grid;
           grid-template-columns: 1fr auto;
-          align-items: center;
+          align-items: start;
           gap: 0;
-          padding: 56px 48px 40px;
-          min-height: calc(100vh - 80px);
+          padding: 48px 48px 56px;
         }
 
-        /* Izquierda */
         .hero-left {
           display: flex; flex-direction: column; gap: 0;
-          padding-right: 48px;
+          padding-right: 56px;
           opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards;
         }
 
         .label {
-          font-size: 12px; font-weight: 700;
-          letter-spacing: 2px; text-transform: uppercase;
-          color: rgba(255,255,255,0.5);
-          margin-bottom: 14px;
+          font-size: 11px; font-weight: 700;
+          letter-spacing: 2.5px; text-transform: uppercase;
+          color: rgba(255,255,255,0.45);
+          margin-bottom: 12px;
         }
 
+        /* TÍTULO = nombre de la canción (grande) */
         .song-title {
-          font-size: clamp(36px, 5.5vw, 72px);
+          font-size: clamp(36px, 5vw, 68px);
           font-weight: 900;
           line-height: 1.0;
           letter-spacing: -2px;
           color: #fff;
-          margin-bottom: 16px;
+          margin-bottom: 10px;
         }
 
+        /* ARTISTA debajo del título (pequeño) */
         .song-artist {
-          font-size: clamp(15px, 1.8vw, 20px);
-          font-weight: 500;
-          color: rgba(255,255,255,0.7);
+          font-size: clamp(14px, 1.6vw, 18px);
+          font-weight: 600;
+          color: rgba(255,255,255,0.65);
           margin-bottom: 10px;
         }
 
         .song-meta {
           font-size: 13px;
-          color: rgba(255,255,255,0.4);
-          margin-bottom: 36px;
-          line-height: 1.6;
+          color: rgba(255,255,255,0.38);
+          margin-bottom: 32px;
+          line-height: 1.7;
         }
 
-        .btn-row {
-          display: flex; align-items: center; gap: 12px;
-          flex-wrap: wrap;
-          margin-bottom: 40px;
-        }
-        .btn-open {
-          padding: 15px 32px;
-          border-radius: 50px; border: none;
-          background: #fff; color: #000;
-          font-family: 'Figtree', sans-serif;
-          font-size: 15px; font-weight: 800;
-          cursor: pointer; white-space: nowrap;
-          transition: transform 0.12s, background 0.15s;
-          box-shadow: 0 4px 24px rgba(0,0,0,0.35);
-        }
-        .btn-open:hover   { background: rgba(255,255,255,0.88); }
-        .btn-open:active  { transform: scale(0.97); }
-
+        /* Solo botón de descarga */
         .btn-download {
-          padding: 14px 32px;
+          display: inline-block;
+          padding: 15px 36px;
           border-radius: 50px;
           border: 1.5px solid rgba(255,255,255,0.45);
           background: transparent; color: #fff;
           font-family: 'Figtree', sans-serif;
           font-size: 15px; font-weight: 700;
           cursor: pointer; white-space: nowrap;
-          text-decoration: none; display: inline-block;
+          text-decoration: none;
           transition: all 0.15s;
+          margin-bottom: 44px;
+          align-self: flex-start;
         }
         .btn-download:hover {
           background: rgba(255,255,255,0.1);
           border-color: #fff;
         }
 
-        /* Canciones relacionadas */
+        /* Música similar */
         .related-label {
           font-size: 11px; font-weight: 700;
           letter-spacing: 2px; text-transform: uppercase;
-          color: rgba(255,255,255,0.4);
+          color: rgba(255,255,255,0.38);
           margin-bottom: 14px;
         }
         .related-list {
-          display: flex; flex-direction: column; gap: 10px;
+          display: flex; flex-direction: column; gap: 8px;
         }
         .related-item {
           display: flex; align-items: center; gap: 12px;
-          cursor: pointer;
-          padding: 8px;
+          padding: 8px 10px;
           border-radius: 10px;
-          transition: background 0.15s;
+          /* No clickeable — solo visual */
+          cursor: default;
+          user-select: none;
         }
-        .related-item:hover { background: rgba(255,255,255,0.07); }
         .related-thumb {
-          width: 44px; height: 44px;
+          width: 42px; height: 42px;
           border-radius: 6px; object-fit: cover;
           flex-shrink: 0;
           background: #1e1040;
@@ -211,18 +214,20 @@ export default function SharePage({ searchParams }) {
           color: #fff;
         }
         .related-artist {
-          font-size: 12px; color: rgba(255,255,255,0.5);
+          font-size: 12px; color: rgba(255,255,255,0.45);
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         /* Derecha: portada */
         .hero-right {
           flex-shrink: 0;
-          opacity: 0; animation: scaleIn 0.7s cubic-bezier(0.34,1.4,0.64,1) 0.25s forwards;
+          opacity: 0;
+          animation: scaleIn 0.7s cubic-bezier(0.34,1.4,0.64,1) 0.25s forwards;
+          padding-top: 8px;
         }
         .artwork-wrap {
-          width: clamp(220px, 30vw, 420px);
-          height: clamp(220px, 30vw, 420px);
+          width: clamp(220px, 28vw, 400px);
+          height: clamp(220px, 28vw, 400px);
           border-radius: 18px; overflow: hidden;
           box-shadow: 0 48px 120px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.07);
           background: linear-gradient(135deg, #1e1040, #0d0620);
@@ -240,20 +245,17 @@ export default function SharePage({ searchParams }) {
           .nav { padding: 22px 20px 0; }
           .hero {
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
             padding: 28px 20px 48px;
-            min-height: unset;
             gap: 28px;
           }
-          .hero-left { padding-right: 0; order: 2; }
+          .hero-left  { padding-right: 0; order: 2; }
           .hero-right { order: 1; justify-self: center; }
           .artwork-wrap {
             width: min(260px, 75vw);
             height: min(260px, 75vw);
           }
-          .song-title { font-size: clamp(28px, 9vw, 44px); letter-spacing: -1px; }
-          .btn-row { justify-content: center; }
-          .related-label, .related-list { display: none; }
+          .song-title { letter-spacing: -1px; }
+          .btn-download { align-self: stretch; text-align: center; }
         }
 
         @keyframes fadeIn  { from{opacity:0}  to{opacity:1} }
@@ -263,37 +265,37 @@ export default function SharePage({ searchParams }) {
 
       <div className="page">
         <nav className="nav">
-          <img src={ICON} alt="SoundDrift" />
+          <img src={ICON} alt="SoundDrift" className="nav-icon" />
           <span className="nav-name">SoundDrift</span>
         </nav>
 
         <div className="hero">
-          {/* Izquierda */}
           <div className="hero-left">
             <div className="label">Canción compartida</div>
+
+            {/* Título = nombre de la canción */}
             <h1 className="song-title">{title || 'SoundDrift'}</h1>
+
+            {/* Artista debajo */}
             <p className="song-artist">
-              {artist || 'Escucha música sin límites'}
+              {artist || 'Artista desconocido'}
               {artist && ' · Disponible en SoundDrift'}
             </p>
+
             <p className="song-meta">
               Escucha esta canción sin anuncios y sin conexión.<br/>
               Descarga SoundDrift gratis y disfrútala ahora.
             </p>
 
-            <div className="btn-row">
-              <button className="btn-open" onClick={openApp}>
-                Abrir en SoundDrift
-              </button>
-              <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
-                Descargar SoundDrift
-              </a>
-            </div>
+            {/* Solo botón descargar */}
+            <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+              Descargar SoundDrift
+            </a>
 
-            {/* Canciones relacionadas */}
+            {/* Música similar */}
             {related.length > 0 && (
               <>
-                <div className="related-label">Más de {artist || 'este artista'}</div>
+                <div className="related-label">Música similar que puedes encontrar en SoundDrift</div>
                 <div className="related-list">
                   {related.map((r, i) => (
                     <div key={i} className="related-item">
@@ -313,7 +315,7 @@ export default function SharePage({ searchParams }) {
             )}
           </div>
 
-          {/* Derecha: portada */}
+          {/* Portada */}
           <div className="hero-right">
             <div className="artwork-wrap">
               {displayArtwork ? (

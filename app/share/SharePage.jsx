@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, use } from 'react';
 
-const DOWNLOAD_URL = 'https://www.mediafire.com/file/y6athk86ct4daqa/app-release.apk/file';
+const DOWNLOAD_URL = 'https://play.google.com/store/apps/details?id=com.zzkko';
 
 export default function SharePage({ searchParams }) {
   const params  = searchParams instanceof Promise ? use(searchParams) : searchParams;

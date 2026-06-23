@@ -239,7 +239,7 @@ export default function HomePage() {
           <p>
             SoundDrift es la app para descargar música y videos directo en tu dispositivo.
             Crea playlists, usa el modo karaoke, recorta tus canciones y mucho más —
-            sin suscripciones, sin anuncios que interrumpan.
+            sin suscripciones.
           </p>
           <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
             Descargar SoundDrift

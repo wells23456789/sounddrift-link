@@ -1,94 +1,33 @@
-// app/share/page.jsx
+// app/page.jsx
 // ─────────────────────────────────────────────────────────────────────────────
-// App Links + fb:app_id para que Facebook Stories genere el sticker
-// interactivo "Abrir en SoundDrift" cuando se comparte una historia.
+// Landing page principal (https://sounddrift-link.vercel.app/)
+// Se muestra cuando alguien NO entra por un link de canción (/share),
+// sino que abre el dominio raíz directamente.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const BASE_URL    = 'https://sounddrift-link.vercel.app';
-const ANDROID_PKG = 'com.sounddrift.music';
-const FB_APP_ID   = '2032473874293972';
-// Si tienes app en App Store, pon el ID aquí. Si no, déjalo vacío ('').
-const IOS_APP_ID  = '';
+export const metadata = {
+  title: 'SoundDrift — Escucha y descarga tu música favorita',
+  description:
+    'SoundDrift es una app móvil para descargar y escuchar tu música favorita directamente en tu dispositivo. Sin suscripciones, sin anuncios molestos.',
+  openGraph: {
+    title: 'SoundDrift — Escucha y descarga tu música favorita',
+    description:
+      'Descarga música, crea playlists, agrega tus videos favoritos y mucho más.',
+    siteName: 'SoundDrift',
+    type: 'website',
+    images: [
+      {
+        url: 'https://sounddrift-link.vercel.app/screenshots/5.png',
+        width: 1080,
+        height: 1920,
+        alt: 'SoundDrift app',
+      },
+    ],
+  },
+};
 
-export async function generateMetadata({ searchParams }) {
-  const params  = await searchParams;
-  const title   = params?.title   || 'SoundDrift';
-  const artist  = params?.artist  || 'Escucha música sin límites';
-  const artwork = params?.artwork || '';
+import HomePage from './HomePage';
 
-  const description = `${title} — ${artist} · Escucha en SoundDrift`;
-
-  const ogImage = `${BASE_URL}/api/og`
-    + `?title=${encodeURIComponent(title)}`
-    + `&artist=${encodeURIComponent(artist)}`
-    + (artwork ? `&artwork=${encodeURIComponent(artwork)}` : '');
-
-  const deepLink = `sounddrift://share`
-    + `?title=${encodeURIComponent(title)}`
-    + `&artist=${encodeURIComponent(artist)}`
-    + (artwork ? `&artwork=${encodeURIComponent(artwork)}` : '');
-
-  const pageUrl = `${BASE_URL}/share`
-    + `?title=${encodeURIComponent(title)}`
-    + `&artist=${encodeURIComponent(artist)}`;
-
-  return {
-    title:       `${title} — ${artist}`,
-    description,
-
-    openGraph: {
-      title:       `${title} — ${artist}`,
-      description,
-      siteName:    'SoundDrift',
-      type:        'music.song',
-      url:         pageUrl,
-      images: [{
-        url:    ogImage,
-        width:  600,
-        height: 600,
-        alt:    `${title} — ${artist}`,
-        type:   'image/png',
-      }],
-    },
-
-    twitter: {
-      card:        'summary_large_image',
-      title:       `${title} — ${artist}`,
-      description,
-      images:      [ogImage],
-    },
-
-    other: {
-      // ── App Links Android ────────────────────────────────────────────────
-      // Al tocar la card en WhatsApp/Facebook/navegador → abre SoundDrift.
-      // Facebook lee estos tags del content_url para generar el sticker
-      // interactivo "Abrir en SoundDrift" en la historia.
-      'al:android:url':      deepLink,
-      'al:android:app_name': 'SoundDrift',
-      'al:android:package':  ANDROID_PKG,
-
-      // ── App Links iOS ────────────────────────────────────────────────────
-      ...(IOS_APP_ID ? {
-        'al:ios:url':          deepLink,
-        'al:ios:app_name':     'SoundDrift',
-        'al:ios:app_store_id': IOS_APP_ID,
-      } : {}),
-
-      // ── Web fallback ─────────────────────────────────────────────────────
-      'al:web:should_fallback': 'true',
-      'al:web:url':             pageUrl,
-
-      // ── Facebook App ID ──────────────────────────────────────────────────
-      // Este tag conecta la URL con tu app registrada en Facebook Developer.
-      // Facebook lo usa para verificar que SoundDrift tiene App Links válidos
-      // y genera el sticker interactivo en las historias automáticamente.
-      'fb:app_id': FB_APP_ID,
-    },
-  };
-}
-
-import SharePage from './SharePage';
-
-export default function Page({ searchParams }) {
-  return <SharePage searchParams={searchParams} />;
+export default function Page() {
+  return <HomePage />;
 }

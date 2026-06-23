@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-const DOWNLOAD_URL = 'https://play.google.com/store/apps/details?id=com.zzkko';
+const DOWNLOAD_URL = 'https://www.mediafire.com/file/i5q6vlgqb672i7r/SoundDrift.apk/file';
 
 const ICON = '/icon/icon.png';
 

@@ -14,7 +14,7 @@ const SCREENSHOTS = [
 ];
 
 const FEATURES = [
-  { icon: '⬇️', title: 'Descarga sin límites', text: 'Guarda tu música favorita directo en tu dispositivo, sin depender de internet.' },
+  { title: 'Descarga sin límites', text: 'Guarda tu música favorita directo en tu dispositivo, sin depender de internet.' },
   { icon: '🎬', title: 'Videos integrados', text: 'Agrega y organiza los videos musicales que más te gustan.' },
   { icon: '🎤', title: 'Modo Karaoke', text: 'Elimina las voces de cualquier canción y canta sin pistas.' },
   { icon: '✂️', title: 'Recorta y mezcla', text: 'Crea clips con fade-in/fade-out o mezcla dos canciones a tu gusto.' },

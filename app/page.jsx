@@ -4,7 +4,7 @@ import HomePage from './HomePage';
 export const metadata = {
   title: 'SoundDrift — Escucha y descarga tu música favorita',
   description:
-    'SoundDrift es una app móvil para descargar y escuchar tu música favorita directamente en tu dispositivo. Sin suscripciones, sin anuncios molestos.',
+    'SoundDrift es una app móvil para descargar y escuchar tu música favorita directamente en tu dispositivo. Sin suscripciones.',
   openGraph: {
     title: 'SoundDrift — Escucha y descarga tu música favorita',
     description:

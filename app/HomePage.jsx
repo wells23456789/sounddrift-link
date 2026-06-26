@@ -280,7 +280,13 @@ export default function HomePage() {
           <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
             Descargar SoundDrift gratis
           </a>
-          <p>© {new Date().getFullYear()} SoundDrift · Hecho para amantes de la música</p>
+          <p>
+            © {new Date().getFullYear()} SoundDrift · Hecho para amantes de la música
+            {' · '}
+            <a href="/privacy" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'underline' }}>
+              Política de privacidad
+            </a>
+          </p>
         </div>
       </div>
     </>

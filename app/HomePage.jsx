@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-const DOWNLOAD_URL = 'https://www.mediafire.com/file/i5q6vlgqb672i7r/SoundDrift.apk/file';
+const UPTODOWN_URL = 'https://sounddrift.en.uptodown.com/android';
+const BTN_BIG = 'https://stc.utdstc.com/img/mediakit/download-gio-big-w.png';
+const BTN_SMALL = 'https://stc.utdstc.com/img/mediakit/download-gio-small-w.png';
 
 const ICON = '/icon/icon.png';
 
@@ -93,17 +95,8 @@ export default function HomePage() {
           outline: none; border: none; background: transparent;
         }
         .nav-name { font-size: 16px; font-weight: 800; }
-        .nav-btn {
-          padding: 10px 22px;
-          border-radius: 50px;
-          border: 1.5px solid rgba(255,255,255,0.45);
-          background: transparent; color: #fff;
-          font-family: 'Figtree', sans-serif;
-          font-size: 13px; font-weight: 700;
-          text-decoration: none;
-          transition: all 0.15s;
-        }
-        .nav-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        .nav-btn-link { display: inline-flex; align-items: center; }
+        .nav-btn-link img { height: 38px; width: auto; display: block; }
 
         .hero {
           position: relative; z-index: 2;
@@ -133,19 +126,9 @@ export default function HomePage() {
           font-size: 16px; color: rgba(255,255,255,0.65);
           line-height: 1.6;
         }
-        .btn-download {
-          display: inline-block;
-          padding: 16px 40px;
-          border-radius: 50px;
-          border: 1.5px solid rgba(255,255,255,0.45);
-          background: #fff; color: #4A0080;
-          font-family: 'Figtree', sans-serif;
-          font-size: 15px; font-weight: 800;
-          cursor: pointer; white-space: nowrap;
-          text-decoration: none;
-          transition: all 0.15s;
-        }
-        .btn-download:hover { transform: translateY(-2px); }
+        .btn-download-link { display: inline-flex; transition: transform 0.15s; }
+        .btn-download-link:hover { transform: translateY(-2px); }
+        .btn-download-link img { height: 56px; width: auto; display: block; }
 
         /* Carrusel */
         .carousel-section {
@@ -228,8 +211,8 @@ export default function HomePage() {
             <img src={ICON} alt="SoundDrift" className="nav-icon" />
             <span className="nav-name">SoundDrift</span>
           </div>
-          <a className="nav-btn" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
-            Descargar
+          <a className="nav-btn-link" href={UPTODOWN_URL} title="Download SoundDrift" target="_blank" rel="noopener noreferrer">
+            <img src={BTN_SMALL} alt="Download SoundDrift" />
           </a>
         </nav>
 
@@ -241,8 +224,8 @@ export default function HomePage() {
             Crea playlists, usa el modo karaoke, recorta tus canciones y mucho más —
             sin suscripciones.
           </p>
-          <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
-            Descargar SoundDrift
+          <a className="btn-download-link" href={UPTODOWN_URL} title="Download SoundDrift" target="_blank" rel="noopener noreferrer">
+            <img src={BTN_BIG} alt="Download SoundDrift" />
           </a>
         </header>
 
@@ -277,8 +260,8 @@ export default function HomePage() {
         </section>
 
         <div className="footer-cta">
-          <a className="btn-download" href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
-            Descargar SoundDrift gratis
+          <a className="btn-download-link" href={UPTODOWN_URL} title="Download SoundDrift" target="_blank" rel="noopener noreferrer">
+            <img src={BTN_BIG} alt="Download SoundDrift" />
           </a>
           <p>
             © {new Date().getFullYear()} SoundDrift · Hecho para amantes de la música

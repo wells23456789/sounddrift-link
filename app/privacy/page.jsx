@@ -1,91 +1,193 @@
 export const metadata = {
   title: 'Política de Privacidad — SoundDrift',
-  description: 'Política de privacidad de la aplicación SoundDrift.',
+  description:
+    'Qué permisos pide SoundDrift, qué guarda en tu teléfono, qué sale de él y qué decides tú. Explicado en palabras sencillas.',
 };
 
 const SECTIONS = [
   {
-    title: 'Recopilación y uso de la información',
-    content: `La aplicación recopila información cuando usted la descarga y la utiliza. Esta información puede incluir:`,
+    title: 'En pocas palabras',
+    content: `SoundDrift no te pide crear una cuenta, ni tu nombre, correo, teléfono ni contactos.
+
+Tu música, tus listas, tu historial y tus preferencias se quedan guardados en tu teléfono. Solo sale información del teléfono cuando usas una función que necesita internet, por ejemplo buscar una letra, reconocer una canción, ver el clima o enviar un archivo a otra persona. En cada sección te explicamos qué sale y para qué.
+
+No vendemos tu información personal.`,
+  },
+  {
+    title: 'Permisos que pide la app y para qué',
+    content: `Un permiso es una autorización que tu teléfono te pide antes de dejar que una app use algo, como el micrófono o tus archivos. SoundDrift pide cada permiso solo cuando vas a usar la función que lo necesita, y puedes quitarlo en cualquier momento desde los ajustes de tu teléfono, en la sección de permisos de la app. Si no concedes un permiso, esa función no estará disponible, pero el resto de la app sigue funcionando.`,
     list: [
-      'La dirección de protocolo de Internet de su dispositivo',
-      'Las páginas de la aplicación que usted visita, la hora y la fecha de su visita, el tiempo que pasa en esas páginas',
-      'El tiempo dedicado a la aplicación',
-      'El sistema operativo móvil que utiliza',
+      'Internet y estado de la red: para buscar letras y portadas, reproducir y descargar contenido, mostrar anuncios y compartir.',
+      'Música y videos: para encontrar y reproducir lo que tienes en tu teléfono.',
+      'Acceso a todos los archivos y a modificar medios: para guardar lo que descargas o recibes en la carpeta SoundDrift, renombrar, mover o eliminar solo los archivos que tú indiques y corregir el título y el artista de tus canciones.',
+      'Micrófono: para reconocer canciones, grabar audio, traducir lo que hablas y usar el asistente de voz. Solo se usa mientras tú activas la función.',
+      'Cámara: para escanear códigos QR y códigos de SoundDrift. Las imágenes se analizan en tu teléfono y no se guardan ni se envían.',
+      'Ubicación aproximada o precisa (opcional): para mostrar el clima y los conciertos cercanos.',
+      'Notificaciones: para los controles de reproducción, el avance de descargas y envíos, y el aviso de archivos recibidos.',
+      'Funcionar en segundo plano y mantener el teléfono despierto: para que la música, las descargas y los envíos no se detengan si bloqueas la pantalla o sales de la app. También se pide que el teléfono no limite el consumo de batería de SoundDrift. Mientras esto ocurre verás una notificación.',
+      'WiFi y red cercana: para encontrar otros teléfonos con SoundDrift cuando compartes archivos.',
+      'Bluetooth: para saber qué auricular o altavoz tienes conectado y mostrarlo en el reproductor.',
+      'Mostrar sobre otras apps (opcional): para la ventana flotante del reconocimiento de canciones.',
+      'Captura del audio del teléfono: para reconocer una canción que suena en otra app. Tu teléfono te muestra un aviso cada vez.',
+      'Instalar apps: para abrir el instalador de tu teléfono cuando tocas un archivo de instalación (APK) recibido. La instalación siempre te pide confirmación.',
+      'Ventana de video flotante: para seguir viendo un video en una ventana pequeña.',
+      'Identificador de publicidad: lo usa el servicio de anuncios que muestra la app (ver la sección Anuncios).',
     ],
   },
   {
-    title: 'Cookies y tecnologías de seguimiento',
-    content: `La aplicación o sus SDK de terceros pueden usar cookies, píxeles y tecnologías similares para brindar soporte a la funcionalidad, el análisis o la prestación de servicios. Cuando lo exija la ley aplicable, el proveedor de servicios obtendrá el consentimiento antes de usar tecnologías de seguimiento no esenciales.`,
-  },
-  {
-    title: 'Sus derechos',
-    content: `Usted puede solicitar el acceso, la corrección o la eliminación de sus datos personales en poder del Proveedor de Servicios. Para ejercer estos derechos o para revocar su consentimiento cuando el tratamiento de datos se base en él, póngase en contacto con el Proveedor de Servicios en jt0346969@gmail.com.`,
-  },
-  {
-    title: 'Sus derechos de privacidad en California (CCPA/CPRA)',
-    content: `Si reside en California, tiene derecho a saber qué información personal se recopila, derecho a eliminarla, derecho a oponerse a la venta o compartición de su información personal y derecho a no ser discriminado por ejercer estos derechos. Para ejercer sus derechos conforme a la CCPA/CPRA, comuníquese con el proveedor de servicios a través de jt0346969@gmail.com.
-
-El proveedor de servicios podrá utilizar la información que usted proporcione para enviarle información importante, avisos obligatorios y, cuando la ley lo permita, comunicaciones de marketing.`,
-  },
-  {
-    title: 'Acceso de terceros',
-    content: `Solo se transmiten periódicamente datos agregados y anonimizados a servicios externos para ayudar al Proveedor de Servicios a mejorar la Aplicación y su servicio. El Proveedor de Servicios podrá compartir su información con terceros según se describe en esta declaración de privacidad.
-
-La aplicación utiliza servicios de terceros que cuentan con su propia política de privacidad sobre el tratamiento de datos:`,
-    links: [
-      { label: 'AppLovin', href: 'https://www.applovin.com/privacy/' },
-    ],
-    after: `El Proveedor de Servicios podrá divulgar la información:`,
-    afterList: [
-      'Según lo exija la ley, como para cumplir con una citación judicial o proceso legal similar',
-      'Cuando crean de buena fe que la divulgación es necesaria para proteger sus derechos o la seguridad de otros',
-      'Con sus proveedores de servicios de confianza que trabajan en su nombre y han aceptado cumplir con las reglas de esta política',
-    ],
-  },
-  {
-    title: 'Transferencias internacionales de datos',
-    content: `El Proveedor de Servicios o sus proveedores de servicios externos podrán transferir datos personales a países fuera de su país de residencia. Cuando la legislación aplicable exija garantías, el Proveedor de Servicios utilizará los mecanismos adecuados, incluyendo Cláusulas Contractuales Tipo aprobadas por la Comisión Europea, decisiones de adecuación u otros mecanismos reconocidos legalmente.`,
-  },
-  {
-    title: 'Derechos de exclusión voluntaria',
-    content: `Puedes detener la recopilación de información desinstalando la aplicación. Al desinstalarla, la aplicación dejará de recopilar datos de tu dispositivo, pero no eliminará automáticamente la información ya transmitida al proveedor de servicios o a terceros.
-
-Para solicitar la eliminación de sus datos personales, contáctenos en jt0346969@gmail.com.`,
-  },
-  {
-    title: 'Política de retención de datos',
-    content: `El proveedor de servicios conserva los datos personales según su necesidad:`,
+    title: 'Lo que se guarda en tu teléfono',
+    content: `Esta información se queda en tu teléfono y no se envía a servidores de SoundDrift:`,
     list: [
-      'Datos proporcionados por el usuario: durante el tiempo que use la aplicación, más 12 meses adicionales',
-      'Datos recopilados automáticamente: máximo 24 meses desde su recopilación',
-      'Datos agregados y anonimizados: indefinidamente, ya que no le identifican',
-      'Datos necesarios para cumplimiento legal: durante el tiempo que exija la ley aplicable',
+      'Tu biblioteca de música y videos, los nombres y artistas que edites y las portadas ya descargadas.',
+      'Tus favoritos, listas de reproducción y la cola de canciones.',
+      'Tu historial de reproducción (qué escuchaste y cuándo, hasta 5000 registros) y, a partir de él, el resumen de Tu Semana Sonora.',
+      'Tus búsquedas recientes, hasta dónde llevas cada video y la velocidad que elegiste.',
+      'Tus ajustes de sonido, idioma y apariencia.',
+      'Lo que descargas o recibes, en la carpeta SoundDrift.',
     ],
+    after: `Puedes borrar tu historial desde la app. El resto se elimina si borras los datos de la app o la desinstalas. Los archivos que ya estén en tus carpetas pueden seguir ahí hasta que tú los borres.
+
+La app desactiva las copias de seguridad automáticas, así que estos datos no se suben a la nube de tu teléfono por esa vía. Convertir videos a audio y otros procesos de edición de sonido se hacen dentro de tu teléfono, sin enviar tus archivos a ningún servidor.`,
+  },
+  {
+    title: 'Lo que sale de tu teléfono y a quién',
+    content: `Para que algunas funciones trabajen, la app consulta servicios externos de otras empresas. Siempre se envía solo lo necesario. Como en cualquier conexión a internet, esos servicios también pueden ver tu dirección IP y datos básicos de tu teléfono.`,
+    list: [
+      'Portadas, discografías y datos de canciones: el nombre del artista y de la canción.',
+      'Letras: el artista y el título.',
+      'Traducción: el texto de la letra o de lo que hablas, solo cuando pides traducirlo.',
+      'Reconocer canciones: un fragmento de audio de unos 10 segundos, solo cuando tocas el botón de reconocer.',
+      'Videos en línea: lo que buscas y el video que eliges reproducir o descargar. No se inicia sesión en ninguna cuenta.',
+      'Clima: tu ubicación aproximada. Si no das permiso de ubicación, se estima tu ciudad a partir de tu conexión a internet.',
+      'Conciertos: el nombre del artista y tu país.',
+      'Películas, series y radio: lo que buscas o consultas para mostrarte resultados.',
+      'Enlaces para compartir canciones: el título y el artista, que van dentro del enlace.',
+    ],
+    after: `Cada una de esas empresas tiene sus propias reglas de privacidad sobre cómo trata lo que recibe.`,
+  },
+  {
+    title: 'Compartir archivos con otras personas',
+    content: `Compartir envía los archivos directamente de un teléfono a otro. Los archivos no se suben a servidores de SoundDrift.
+
+Para que tu teléfono aparezca en la lista de otros, la app anuncia un código aleatorio de instalación (no te identifica personalmente), el nombre que le pusiste a tu teléfono y su dirección en la red.
+
+Para encontrar teléfonos que están en otra red, la app también avisa cada pocos segundos a un servidor de SoundDrift que ayuda a que los dispositivos se vean entre sí. A ese servidor le llegan el código aleatorio, el nombre del teléfono y su dirección en internet, y se usan solo en el instante en que se busca un dispositivo, para mostrarte a los demás y mostrarte a ti. SoundDrift no registra ni guarda esas direcciones. Para conocer la dirección, la app consulta un servicio externo sencillo. Si ese servidor no está disponible, Compartir sigue funcionando entre teléfonos de la misma red WiFi.
+
+Antes de recibir, la otra persona ve el nombre, el tamaño y una miniatura del archivo, y cualquiera de los dos puede cancelar en cualquier momento. Lo que recibes se guarda en la carpeta SoundDrift de tu teléfono.`,
+    after: `Importante: los archivos viajan sin un cifrado especial. Compártelos solo con personas que conozcas y, de preferencia, en redes de confianza, no en WiFi públicos.`,
+  },
+  {
+    title: 'Micrófono, voz y audio del teléfono',
+    list: [
+      'Reconocer canciones: se graba un fragmento corto, ya sea con el micrófono o capturando el audio que suena en tu teléfono, se envía una vez para identificar la canción y se borra del teléfono al terminar.',
+      'Traducción en vivo y asistente de voz: usan el reconocimiento de voz de tu teléfono. Según tu equipo, ese servicio puede procesar tu voz en internet. SoundDrift no guarda tu voz.',
+      'Grabadora: tus grabaciones se guardan solo en tu teléfono.',
+    ],
+    after: `El micrófono y la captura de audio nunca se activan solos: siempre los activas tú, y tu teléfono muestra un indicador mientras están en uso.`,
+  },
+  {
+    title: 'Cámara',
+    content: `La cámara solo se abre para escanear códigos. Lo que ve la cámara se analiza al instante en tu teléfono y no se guarda ni se envía a ningún lado.`,
+  },
+  {
+    title: 'Ubicación',
+    content: `Es opcional. Se consulta cuando abres el clima o los conciertos, se envía al servicio del clima (y tu país al de conciertos) para darte resultados, y no se guarda en servidores de SoundDrift ni se usa para seguirte. Si no das el permiso, la app estima tu ciudad por tu conexión o te deja elegirla a mano.`,
+  },
+  {
+    title: 'Anuncios',
+    content: `La app muestra anuncios para poder ser gratuita. Esos anuncios los gestiona un servicio de publicidad externo, que puede recopilar el identificador de publicidad de tu teléfono, tu dirección IP, datos del equipo (modelo, sistema, idioma), cómo interactúas con los anuncios y datos de diagnóstico, y compartirlos con sus socios publicitarios.
+
+Puedes borrar o reiniciar el identificador de publicidad, o desactivar los anuncios personalizados, desde los ajustes de anuncios de tu teléfono. Si la ley de tu país lo exige, la app te pedirá tu consentimiento antes de mostrar anuncios personalizados.
+
+SoundDrift no vende tus datos personales.`,
+  },
+  {
+    title: 'Segundo plano y notificaciones',
+    list: [
+      'Música: la reproducción sigue con la pantalla bloqueada y muestra sus controles en una notificación.',
+      'Descargas y envíos: siguen aunque salgas de la app y muestran una notificación con el nombre, la imagen y el avance del archivo. Se quita sola al terminar.',
+      'Avisos de estrenos: de forma periódica (cerca de cada 6 horas), aunque la app esté cerrada, revisa por internet si hay películas, series o episodios nuevos para avisarte con una notificación.',
+      'Accesos directos: la app puede mostrar atajos de lo último que escuchaste al mantener presionado su icono. Se arman en tu teléfono.',
+    ],
+    after: `Puedes desactivar las notificaciones desde los ajustes de tu teléfono.`,
+  },
+  {
+    title: 'Apps instaladas y archivos de instalación',
+    content: `En Compartir puedes elegir apps instaladas para enviarlas a otra persona. Para mostrarlas, la app consulta la lista de apps de tu teléfono que tienen icono (su nombre e imagen). Esa lista se usa solo en pantalla y no se envía a servidores.
+
+Si tocas un archivo de instalación (APK) que recibiste, tu teléfono te deja elegir con qué instalarlo y te pide confirmar. SoundDrift no puede instalar nada sin tu permiso. Instala solo archivos de personas y lugares en los que confíes, porque una app mala puede dañar tu teléfono.`,
+  },
+  {
+    title: 'Lo que SoundDrift no hace',
+    list: [
+      'No te pide cuenta, contraseña, correo ni teléfono.',
+      'No lee tus contactos ni tus mensajes.',
+      'No vende tu información personal.',
+      'No activa el micrófono ni la cámara por su cuenta.',
+      'No instala apps sin que tú lo confirmes.',
+      'No usa herramientas propias para rastrear lo que haces dentro de la app.',
+    ],
+  },
+  {
+    title: 'Cuándo podríamos divulgar información',
+    content: `El Proveedor de Servicios podrá divulgar información:`,
+    list: [
+      'Según lo exija la ley, como para cumplir con una citación judicial o proceso legal similar.',
+      'Cuando crea de buena fe que la divulgación es necesaria para proteger sus derechos o la seguridad de otros.',
+      'Con proveedores de servicios de confianza que trabajan en su nombre y han aceptado cumplir con las reglas de esta política.',
+    ],
+  },
+  {
+    title: 'Tus derechos',
+    content: `Como casi todo se guarda en tu teléfono, tú mismo puedes ver, corregir o borrar tus datos desde la app o borrando sus datos.
+
+Si quieres pedir acceso, corrección o eliminación de datos que estén en manos del Proveedor de Servicios, o retirar un consentimiento que diste, escríbenos a jt0346969@gmail.com.`,
+  },
+  {
+    title: 'Si vives en California (CCPA/CPRA)',
+    content: `Tienes derecho a saber qué información personal se recopila, a pedir que se elimine, a oponerte a que se venda o comparta y a que no te traten distinto por ejercer estos derechos.
+
+SoundDrift no vende información personal. Lo que el servicio de anuncios recopile puede considerarse “compartir” para publicidad, y puedes limitarlo desde los ajustes de anuncios de tu teléfono. Para ejercer tus derechos escribe a jt0346969@gmail.com.`,
+  },
+  {
+    title: 'Datos en otros países',
+    content: `Los servicios externos que usa la app pueden estar en otros países. Cuando la ley exige protecciones adicionales, cada empresa las aplica según los mecanismos legales reconocidos, incluyendo Cláusulas Contractuales Tipo, decisiones de adecuación u otros.`,
+  },
+  {
+    title: 'Cuánto tiempo se conservan los datos',
+    list: [
+      'Lo que está en tu teléfono se queda hasta que lo borres, borres los datos de la app o la desinstales.',
+      'El fragmento de audio del reconocimiento de canciones se usa una sola vez y se borra de tu teléfono.',
+      'Las direcciones de red que se usan para encontrar dispositivos en Compartir no se guardan: solo se usan en el momento de la búsqueda.',
+      'Lo que reciben las empresas externas se conserva según sus propias reglas.',
+    ],
+    after: `Desinstalar la app deja de recopilar datos de tu teléfono, pero no elimina lo que ya tengan las empresas externas. Para pedir que se elimine información que esté en manos del Proveedor de Servicios, escribe a jt0346969@gmail.com.`,
   },
   {
     title: 'Niños',
-    content: `La aplicación no está destinada a menores de 16 años. El Proveedor de Servicios no solicita datos de menores ni les ofrece la aplicación a sabiendas. Si descubrimos que un menor ha proporcionado información personal, la eliminaremos inmediatamente. Si usted es padre o tutor y sabe que su hijo proporcionó información, contáctenos en jt0346969@gmail.com.`,
+    content: `La app no está dirigida a menores de 16 años y no pide datos personales de menores a sabiendas. Si descubrimos que un menor proporcionó información personal, la eliminaremos. Si eres madre, padre o tutor y crees que un menor dio información, escríbenos a jt0346969@gmail.com.`,
   },
   {
     title: 'Seguridad',
-    content: `El proveedor de servicios implementa medidas de seguridad físicas, electrónicas y de procedimiento para proteger la información que procesa y almacena.`,
+    content: `La mayoría de las consultas a internet van protegidas, pero la app permite algunas conexiones sin cifrar (por ejemplo, para ciertos servicios y para la consulta sencilla de tu dirección en internet). Los archivos que envías con Compartir también viajan sin un cifrado especial.
+
+Tus datos guardados en el teléfono están protegidos por la seguridad normal del sistema, no por un cifrado adicional de SoundDrift. Si alguien usa tu teléfono desbloqueado, podría verlos; por eso te recomendamos mantenerlo bloqueado. Ningún sistema es 100 % seguro.`,
   },
   {
-    title: 'Notificación de violación de datos',
-    content: `En caso de una violación de datos que afecte sus datos personales, el Proveedor de Servicios le notificará conforme a los requisitos legales aplicables, incluyendo información sobre la naturaleza de la violación y las medidas tomadas para solucionarla.`,
+    title: 'Si ocurre un problema de seguridad',
+    content: `Si hubiera una filtración que afecte datos personales bajo responsabilidad del Proveedor de Servicios, te avisaremos como lo exige la ley, explicando qué pasó y qué se hizo para resolverlo.`,
   },
   {
     title: 'Cambios a esta política',
-    content: `El Proveedor de Servicios podrá actualizar esta Política de Privacidad periódicamente. Le notificará los cambios sustanciales publicando la Política actualizada con su fecha de entrada en vigor. Las versiones anteriores estarán disponibles previa solicitud contactando a jt0346969@gmail.com.`,
+    content: `Podemos actualizar esta política, por ejemplo cuando la app agregue funciones nuevas. Los cambios importantes se publicarán aquí con su fecha de actualización. Las versiones anteriores estarán disponibles previa solicitud en jt0346969@gmail.com.`,
   },
   {
-    title: 'Su consentimiento',
-    content: `Cuando el tratamiento de datos se basa en el consentimiento, usted lo otorga al aceptar expresamente la función o acción correspondiente. Puede revocar su consentimiento en cualquier momento sin que ello afecte al tratamiento realizado antes de la revocación.`,
+    title: 'Tu consentimiento',
+    content: `Al dar un permiso o usar una función (por ejemplo, el micrófono o la ubicación) aceptas que se use para eso. Puedes retirar tu permiso cuando quieras desde los ajustes de tu teléfono; esto no afecta lo que ya se hizo antes.`,
   },
   {
     title: 'Contáctanos',
-    content: `Si tiene alguna pregunta sobre la privacidad al usar la aplicación, comuníquese con el Proveedor de Servicios en jt0346969@gmail.com.`,
+    content: `Si tienes dudas sobre tu privacidad al usar la app, escríbenos a jt0346969@gmail.com.`,
   },
 ];
 
@@ -220,6 +322,7 @@ export default function PrivacyPage() {
           font-size: 14px; line-height: 1.75;
           color: rgba(255,255,255,0.6);
           margin-top: 14px;
+          white-space: pre-line;
         }
         .footer {
           position: relative; z-index: 2;
@@ -245,13 +348,15 @@ export default function PrivacyPage() {
           <div className="header">
             <div className="eyebrow">Legal</div>
             <h1>Política de Privacidad</h1>
-            <p className="effective-date">Efectiva desde el 26 de junio de 2026</p>
+            <p className="effective-date">Última actualización: 21 de octubre de 2026</p>
           </div>
 
           <p className="intro">
             Esta política de privacidad se aplica a la aplicación <strong>SoundDrift</strong> para
             dispositivos móviles, junto con cualquier servicio relacionado operado por{' '}
-            <strong>IrvinG</strong> (en adelante, el "Proveedor de Servicios").
+            <strong>IrvinG</strong> (en adelante, el &quot;Proveedor de Servicios&quot;). Aquí te
+            explicamos, en palabras sencillas, qué permisos pide la app, qué guarda, qué sale de tu
+            teléfono y qué puedes decidir tú.
           </p>
 
           <div className="divider" />

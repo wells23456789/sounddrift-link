@@ -17,6 +17,10 @@ const SCREENSHOTS = [
 
 const FEATURES = [
   { title: 'Descarga sin límites', text: 'Guarda tu música favorita directo en tu dispositivo, sin depender de internet.' },
+  { title: 'Comparte tu música', text: 'Envía tarjetas musicales a tus amigos y compartan sus gustos.'},
+  { title: 'Comparte en segundos', text: 'Envía música, videos y archivos a tus amigos de forma rápida y sencilla.'},
+  { title: 'Dale vida a la fiesta', text: 'Crea una sesión en Modo Fiesta y comparte tu código QR para que todos participen.'},
+  { title: 'Letras al ritmo', text: 'Sigue las letras sincronizadas con tu canción favorita y canta al compás de la música.'},
 ];
 
 export default function HomePage() {
@@ -217,7 +221,7 @@ export default function HomePage() {
           <h1>Escucha y descarga<br/><span>toda tu música favorita</span></h1>
           <p>
             SoundDrift es la app para descargar música y videos directo en tu dispositivo.
-            Crea playlists, usa el modo karaoke, recorta tus canciones y mucho más —
+            Crea playlists, agregar tus videos favoritos, compartir tu musica con amigos y mucho más —
             sin suscripciones.
           </p>
           <a className="btn-download-link" href={UPTODOWN_URL} title="Download SoundDrift" target="_blank" rel="noopener noreferrer">
